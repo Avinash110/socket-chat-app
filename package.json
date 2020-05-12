@@ -19,7 +19,7 @@
     "voca": "^1.4.0"
   },
   "scripts": {
-    "start": "webpack-dev-server --port 3000",
+    "start": "node server/index.js",
     "build": "webpack -p --config webpack.prod.js"
   },
   "eslintConfig": {
@@ -43,7 +43,12 @@
     "@babel/preset-env": "^7.9.6",
     "babel-loader": "^8.1.0",
     "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^5.1.1",
     "html-webpack-plugin": "^4.3.0",
     "webpack-cli": "^3.3.11"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Avinash110/socket-chat-app"
   }
 }

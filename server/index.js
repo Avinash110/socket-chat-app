@@ -4,7 +4,7 @@ const app = express();
 const connections = [];
 const users = [];
 
-app.use(express.static('./public'));
+app.use(express.static('./build'));
 
 const server = app.listen(3000);
 
