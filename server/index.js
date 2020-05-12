@@ -6,6 +6,10 @@ const users = [];
 
 app.use(express.static('./build'));
 
+app.get('/', function(req, res){
+   res.redirect('/build');
+});
+
 const server = app.listen(3000);
 
 const io = require("socket.io").listen(server);
