@@ -2,6 +2,8 @@ const path = require("path");
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
     mode: 'production',
@@ -21,7 +23,7 @@ module.exports = {
             template: path.resolve(__dirname, 'public', 'index.html'),
         }),
         new CopyPlugin([
-            { from: 'public'}
+            { from: 'public' }
         ])
     ],
     module: {

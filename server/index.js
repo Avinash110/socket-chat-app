@@ -5,11 +5,17 @@ const path = require('path');
 const connections = [];
 const users = [];
 
-var serveStatic = require('serve-static');
+app.use(express.static('build'));
+app.get('/', function(req, res){
+   res.redirect('/todo');
+});
 
-serveStatic(path.join(__dirname, 'build'));
+app.get('/favicon.ico', (req, res) => res.status(204));
 
-const server = app.listen(3000);
+const server = app.listen(process.env.PORT || 3000, function () {
+  var port = server.address().port;
+  console.log("Express is working on port " + port);
+});
 
 const io = require("socket.io").listen(server);
 
@@ -52,5 +58,3 @@ io.on('connection', (socket) => {
 		console.log("User joined: ", newUser);
 	});
 });
-
-console.log("Server listening on port 3000");
