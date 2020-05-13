@@ -1,14 +1,13 @@
 const express = require("express");
 const app = express();
+const path = require('path');
 
 const connections = [];
 const users = [];
 
-app.use(express.static('./build'));
+var serveStatic = require('serve-static');
 
-app.get('/', function(req, res){
-   res.redirect('/build');
-});
+serveStatic(path.join(__dirname, 'build'));
 
 const server = app.listen(3000);
 
