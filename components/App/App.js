@@ -24,11 +24,11 @@ export default class App extends React.Component {
   }
 
   componentWillMount() {
-	this.socket = io("http://localhost:3000");
-	this.socket.on('connect', this.connect);
-	this.socket.on('disconnect', this.disconnect);
-	this.socket.on('messageAdded', this.onMessageAdded);
-	this.socket.on('userJoined', this.onUserJoined);
+  	this.socket = io(location.origin);
+  	this.socket.on('connect', this.connect);
+  	this.socket.on('disconnect', this.disconnect);
+  	this.socket.on('messageAdded', this.onMessageAdded);
+  	this.socket.on('userJoined', this.onUserJoined);
   }
 
   onUserJoined = (users) => {
