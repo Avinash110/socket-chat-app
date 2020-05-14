@@ -5,14 +5,16 @@ const path = require('path');
 const webpack = require('webpack');
 const webpackConfig = require('../webpack.config.js');
 const compiler = webpack(webpackConfig);
-
 const mode = process.env.NODE_ENV || "development";
 
-app.use(require("webpack-dev-middleware")(compiler, {
-    noInfo: true, publicPath: webpackConfig.output.publicPath
-}));
+if(mode == "development"){
+	app.use(require("webpack-dev-middleware")(compiler, {
+	    noInfo: true, publicPath: webpackConfig.output.publicPath
+	}));
 
-app.use(require("webpack-hot-middleware")(compiler));
+	app.use(require("webpack-hot-middleware")(compiler));
+}
+
 
 const connections = [];
 const users = [];

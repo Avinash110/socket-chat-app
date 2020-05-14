@@ -9,6 +9,14 @@ import MessageForm from "../Messages/MessageForm/MessageForm.js";
 
 import UserForm from "../Users/UserForm/UserForm.js";
 import UserList from "../Users/UserList/UserList.js";
+
+const eventToFunctionMapping = [
+	{'event': 'connect', 'function': 'connect'},
+	{'event': 'disconnect', 'function': 'disconnect'},
+	{'event': 'messageAdded', 'function': 'onMessageAdded'},
+	{'event': 'userJoined', 'function': 'onUserJoined'},
+	{'event': 'userTyping', 'function': 'userTyping'}
+];
 export default class App extends React.Component {
 		constructor(props) {
 				super(props);
@@ -26,11 +34,10 @@ export default class App extends React.Component {
 
 		componentWillMount() {
 				this.socket = io(location.origin);
-				this.socket.on('connect', this.connect);
-				this.socket.on('disconnect', this.disconnect);
-				this.socket.on('messageAdded', this.onMessageAdded);
-				this.socket.on('userJoined', this.onUserJoined);
-				this.socket.on('userTyping', this.userTyping);
+
+				eventToFunctionMapping.forEach((element, index) => {
+					this.socket.on(element.event, this[element.function]);
+				});
 		}
 
 		userTyping = (payload) => {
