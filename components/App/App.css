@@ -1,0 +1,6 @@
+.current-user-typing {
+	height: 20px;
+    display: block;
+    color: gray;
+    margin: 2px;	
+}

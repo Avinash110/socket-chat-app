@@ -4,9 +4,10 @@ module.exports = {
         './public/javascripts/index.js'
     ],
     output: {
-        path: path.resolve(__dirname),
-        filename: 'public/javascripts/bundle.js'
+        path: path.resolve(__dirname, "public"),
+        filename: 'javascripts/bundle.js'
     },
+    mode: "development",
     module: {
         rules: [{
                 test: /\.js$/,

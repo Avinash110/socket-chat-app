@@ -10,84 +10,86 @@ import MessageForm from "../Messages/MessageForm/MessageForm.js";
 import UserForm from "../Users/UserForm/UserForm.js";
 import UserList from "../Users/UserList/UserList.js";
 export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    	status: "Disconnected",
-    	messages: [{
-    		timeStamp: Date.now(),
-    		text: "Welcome to Socket Chat"
-    	}],
-    	users: [],
-    	user: ''
-    };
-  }
+		constructor(props) {
+				super(props);
+				this.state = {
+						status: "Disconnected",
+						messages: [{
+								timeStamp: Date.now(),
+								text: "Welcome to Socket Chat"
+						}],
+						users: [],
+						user: '',
+						userTyping: ''
+				};
+		}
 
-  componentWillMount() {
-  	this.socket = io(location.origin);
-  	this.socket.on('connect', this.connect);
-  	this.socket.on('disconnect', this.disconnect);
-  	this.socket.on('messageAdded', this.onMessageAdded);
-  	this.socket.on('userJoined', this.onUserJoined);
-  }
+		componentWillMount() {
+				this.socket = io(location.origin);
+				this.socket.on('connect', this.connect);
+				this.socket.on('disconnect', this.disconnect);
+				this.socket.on('messageAdded', this.onMessageAdded);
+				this.socket.on('userJoined', this.onUserJoined);
+				this.socket.on('userTyping', this.userTyping);
+		}
 
-  onUserJoined = (users) => {
-	this.setState({users:users });
-  }
+		userTyping = (payload) => {
+				this.setState({userTypingId: payload.id, userTyping: payload.user});
+		}
 
-  onMessageAdded = (message) => {
-	this.setState({messages: this.state.messages.concat(message)});
-  }
+		onUserJoined = (users) => {
+				this.setState({ users: users });
+		}
 
-  connect = () => {
-  	this.setState({status: "Connected"});
-  	console.log("Connected:", this.socket.id);
-  }
+		onMessageAdded = (message) => {
+				this.setState({ messages: this.state.messages.concat(message) });
+		}
 
-  disconnect = (users) => {
-  	this.setState({status: "Disconnected", users: users});
-  }
+		connect = () => {
+				this.setState({ status: "Connected" });
+				console.log("Connected:", this.socket.id);
+		}
 
-  emit = (eventName, payload) => {
-	
-	this.socket.emit(eventName, payload);
+		disconnect = (users) => {
+				this.setState({ status: "Disconnected", users: users });
+		}
 
-  }
+		emit = (eventName, payload) => {
+				this.socket.emit(eventName, payload);
+		}
 
-  setUser = (user) => {
-	this.setState({user: user});
-  }
+		setUser = (user) => {
+				this.setState({ user: user });
+		}
 
-  render() {
-  	console.log(this.state.messages);
-  	if (this.state.user == ''){
-		
-		return (
-			<UserForm 
-				emit={this.emit} 
-				setUser={this.setUser}
-			/>
-		);
-  	}
-  	else {
-	    return (
-			<div className="row">
-				<div className="col-md-4 offset-md-1">
-					<UserList 
-						{...this.state}
-					/>
-				</div>
-				<div className="col-md-6">
-					<MessageList 
-						{...this.state}
-					/>
-					<MessageForm
-						emit={this.emit}
-						{...this.state}
-					/>
-				</div>
-			</div>
-	    );
-  	}
-  }
+		render() {
+				if (this.state.user == '') {
+						return (
+								<UserForm 
+									emit={this.emit} 
+									setUser={this.setUser}
+								/>
+						);
+				} else {
+						return (
+								<div className="row">
+									<div className="col-md-4 offset-md-1">
+										<UserList 
+											{...this.state}
+										/>
+									</div>
+									<div className="col-md-6">
+										<MessageList 
+											{...this.state}
+										/>
+										<span className="current-user-typing">{this.state.userTypingId != this.socket.id && this.state.userTyping ? this.state.userTyping + " is typing ..." : ""} </span>
+										<MessageForm
+											emit={this.emit}
+											{...this.state}
+										/>
+									</div>
+								</div>
+						);
+				}
+		}
 }

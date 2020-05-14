@@ -2,10 +2,22 @@ const express = require("express");
 const app = express();
 const path = require('path');
 
+const webpack = require('webpack');
+const webpackConfig = require('../webpack.config.js');
+const compiler = webpack(webpackConfig);
+
+const mode = process.env.NODE_ENV || "development";
+
+app.use(require("webpack-dev-middleware")(compiler, {
+    noInfo: true, publicPath: webpackConfig.output.publicPath
+}));
+
+app.use(require("webpack-hot-middleware")(compiler));
+
 const connections = [];
 const users = [];
 
-app.use(express.static('build'));
+app.use(express.static(mode == "development" ? 'public' : 'build'));
 app.get('/', function(req, res){
    res.redirect('/todo');
 });
@@ -14,7 +26,7 @@ app.get('/favicon.ico', (req, res) => res.status(204));
 
 const server = app.listen(process.env.PORT || 3000, function () {
   var port = server.address().port;
-  console.log("Express is working on port " + port);
+  console.log("Express is working on port " + port+ " in "+ mode + " mode");
 });
 
 const io = require("socket.io").listen(server);
@@ -57,4 +69,14 @@ io.on('connection', (socket) => {
 		io.emit('userJoined', users);
 		console.log("User joined: ", newUser);
 	});
+
+	socket.on('userTyping', (payload) => {
+		const typingUser = {
+			id: socket.id,
+			user: payload.name
+		};
+
+		io.emit('userTyping', typingUser);
+	});
+
 });
